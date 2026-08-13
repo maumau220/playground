@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<meta name="author" content="Maurício Sales de França" />
+    <title>Patinhas.pet - Pet Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <!-- Cabeçalho -->
+    <header>
+      <div class="container cabecalho">
+        <div class="logotipo">Patinhas<span class="destaque">.pet</span></div>
+
+        <button class="hamburguer" id="btn-menu">☰</button>
+
+        <nav class="menu" id="menu">
+          <a href="#hero">Início</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#servicos">Serviços</a>
+          <a href="#contato">Contato</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Principal -->
+    <main>
+      <!-- Hero -->
+      <section class="hero" id="hero">
+        <div class="container hero_container">
+          <div class="hero_conteudo">
+            <h1>
+              Cuidando do seu pet com
+              <span class="destaque">carinho e qualidade</span>
+            </h1>
+            <p>
+              Banho, tosa, e produtos selecionados para garantir a saúde e
+              felicidade do seu melhor amigo.
+            </p>
+            <div class="hero_acoes">
+              <button onclick="document.getElementById('contato').scrollIntoView();">Agendar atendimento</button>
+              <a href="#servicos">Conheça nossos serviços.</a>
+            </div>
+          </div>
+
+          <div class="hero_imagem">
+            <img
+              src="./assets/img/yorkshire.webp"
+              alt="Imagem de um cachorro da raça Yorkshire"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Sobre Section -->
+      <section class="container sobre" id="sobre">
+        <h2>Sobre a Patinhas.pet</h2>
+        <div class="sobre_info">
+          <div class="sobre_conteudo">
+            <p>Nascemos do amor incondicional pelos animais. A Patinhas.pet oferece um ambiente acolhedor e profissionais qualificados para cuidar do seu pet como se fosse da nossa família. Nosso propósito é garantir bem-estar e alegria em cada visita.</p>
+            <br>
+            <div class="sobre_indicadores">
+              <div class="sobre_indicador_item">
+                <strong><span class="destaque">+</span>200</strong>
+                <span>Pets atendidos</span>
+              </div>
+              <div class="sobre_indicador_item">
+                <strong><span class="destaque">+</span>2</strong>
+                <span>Anos de experiência</span>
+              </div>
+              <div class="sobre_indicador_item">
+                <strong>100<span class="destaque">%</span></strong>
+                <span>Amor aos animais</span>
+              </div>
+            </div>
+          </div>
+          <div class="sobre_imagem">
+            <img
+              src="./assets/img/yorkshire.webp"
+              alt="Imagem de um cachorro da raça Yorkshire"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Serviços -->
+      <section class="container servicos" id="servicos">
+        <h2>Nossos Serviços</h2>
+        <div class="servicos_grid">
+          <!-- Card 1 -->
+          <div class="card">
+            <div class="card_imagem" style="background-color: #f43f5e;">
+              <span style="font-size: 40px;">🛁</span>
+            </div>
+            <h3>Banho e Tosa</h3>
+            <p>Higiene completa com produtos adequados para o tipo de pelagem do seu animal.</p>
+          </div>
+          <!-- Card 2 -->
+          <div class="card">
+            <div class="card_imagem" style="background-color: #4f46e5; color: white;">
+              <span style="font-size: 40px;">🩺</span>
+            </div>
+            <h3>Consultas</h3>
+            <p>Avaliação veterinária focada na prevenção e cuidado integral da saúde do pet.</p>
+          </div>
+          <!-- Card 3 -->
+          <div class="card">
+            <div class="card_imagem" style="background-color: #f43f5e;">
+              <span style="font-size: 40px;">🦴</span>
+            </div>
+            <h3>Produtos</h3>
+            <p>Rações, brinquedos e acessórios premium para mimar o seu melhor amigo.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contato -->
+      <section class="container contato" id="contato">
+        <h2>Agende ou fale conosco</h2>
+        <form id="form-contato">
+          <div class="form-group">
+            <label for="nome">Nome completo:</label>
+            <input type="text" id="nome" name="nome" required placeholder="Digite seu nome">
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required placeholder="exemplo@email.com">
+          </div>
+          <div class="form-group">
+            <label for="mensagem">Como podemos ajudar?</label>
+            <textarea id="mensagem" name="mensagem" required rows="4" placeholder="Escreva sua mensagem..."></textarea>
+          </div>
+          <button type="submit" class="btn-enviar">Enviar Mensagem</button>
+          <p id="mensagem-feedback" style="display: none; font-weight: bold; margin-top: 10px; text-align: center"></p>
+        </form>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #4f46e5; color: white; text-align: center; padding: 24px; margin-top: 64px;">
+      <p>&copy; 2026 Patinhas.pet. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Script para interatividade -->
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
