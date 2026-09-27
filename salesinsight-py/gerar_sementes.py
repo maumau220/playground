@@ -5,7 +5,6 @@ import json
 import random
 import re
 from datetime import datetime, timedelta
-import funcoes_dataset as fdt
 
 # Colando script para semear o dataset
 def gerar_dataset_vendas(caminho_csv="vendas.csv", n_registros=200, seed=42):
@@ -67,7 +66,6 @@ def gerar_dataset_vendas(caminho_csv="vendas.csv", n_registros=200, seed=42):
             })
 
     print(f"Dataset gerado com {n_registros} registros em {caminho_csv}.")
-    return gerar_dataset_vendas()
 
 # Comentando para chamar a função diretamente no Jupyter
 # gerar_dataset_vendas()

@@ -33,11 +33,7 @@ def inspecionar_dados(registros):
         print(linha)
     return registros
 
-""" Próximo bloco de funções em cumprimento ao RF03 do guia """
-
-# re e datetime já foram importados no main
-#import re
-#from datetime import datetime
+# Próximo bloco de funções em cumprimento ao RF03 do guia
 
 def limpar_dados(registros):
     """
@@ -83,3 +79,21 @@ def limpar_dados(registros):
     print("\n=== RELATORIO DE LIMPEZA ===")
     print(relatorio)
     return limpos, relatorio
+
+# Trecho de apoio:
+# # conversao de data com tratamento de erro
+
+def converter_data(registros):
+    texto_data = registros["data_venda"]
+    nome = ""
+    try:
+        data = datetime.strptime(texto_data, "%Y-%m-%d")
+    except ValueError:
+        data = None                       # marca como invalida
+
+    # limpeza de texto com expressao regular
+    nome_limpo = re.sub(r"[^A-Za-z0-9_]", "", nome.strip())
+
+    # validacao de formato com padrao compilado
+    padrao_cliente = re.compile(r"^Cliente_\d{3}$", flags=re.IGNORECASE)
+    return padrao_cliente
