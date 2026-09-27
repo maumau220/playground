@@ -2,6 +2,8 @@
 .venv/
 .planejamento
 .planejamento/
+planejamento
+planejamento/
 .testes
 .testes/
 __pycache__

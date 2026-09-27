@@ -82,18 +82,58 @@ def limpar_dados(registros):
 
 # Trecho de apoio:
 # # conversao de data com tratamento de erro
+# def converter_data(registros):
+#     texto_data = registros["data_venda"]
+#     nome = ""
+#     try:
+#         data = datetime.strptime(texto_data, "%Y-%m-%d")
+#     except ValueError:
+#         data = None                       # marca como invalida
 
-def converter_data(registros):
-    texto_data = registros["data_venda"]
-    nome = ""
-    try:
-        data = datetime.strptime(texto_data, "%Y-%m-%d")
-    except ValueError:
-        data = None                       # marca como invalida
+#     # limpeza de texto com expressao regular
+#     nome_limpo = re.sub(r"[^A-Za-z0-9_]", "", nome.strip())
 
-    # limpeza de texto com expressao regular
-    nome_limpo = re.sub(r"[^A-Za-z0-9_]", "", nome.strip())
+#     # validacao de formato com padrao compilado
+#     padrao_cliente = re.compile(r"^Cliente_\d{3}$", flags=re.IGNORECASE)
+#     return padrao_cliente
 
-    # validacao de formato com padrao compilado
-    padrao_cliente = re.compile(r"^Cliente_\d{3}$", flags=re.IGNORECASE)
-    return padrao_cliente
+def criar_colunas_derivadas(registros):
+    # Mapeamento de meses em portugues (Semana 04/05 - Dicionários)
+    nome_mes = {
+        1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril",
+        5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
+        9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
+    }
+
+    for linha in registros:
+        # Cálculo da receita total
+        receita = round(linha["quantidade"] * linha["preco_unitario"], 2)
+        linha["receita_total"] = receita
+
+        # Extracao de mes e ano via objeto datetime (Semana 05)
+        mes = linha["data_venda"].month
+        linha["mes"] = mes
+        linha["ano"] = linha["data_venda"].year
+
+        # Nome do mes em portugues
+        linha["mes_nome"] = nome_mes[mes]
+
+        # Classificacao do trimestre com if/elif/else (S03)
+        if mes in (1, 2, 3):
+            linha["trimestre"] = "Q1"
+        elif mes in (4, 5, 6):
+            linha["trimestre"] = "Q2"
+        elif mes in (7, 8, 9):
+            linha["trimestre"] = "Q3"
+        else:
+            linha["trimestre"] = "Q4"
+
+        # Classificacao da faixa de receita do item (S03)
+        if receita < 500:
+            linha["faixa_receita_item"] = "Baixo Valor"
+        elif receita < 5000:
+            linha["faixa_receita_item"] = "Medio Valor"
+        else:
+            linha["faixa_receita_item"] = "Alto Valor"
+
+    return registros
