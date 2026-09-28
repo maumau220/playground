@@ -5,6 +5,7 @@ import json
 import random
 import re
 from datetime import datetime, timedelta
+from collections import defaultdict # RF05
 
 def carregar_dataset(caminho_csv):
     """Le o CSV e retorna uma lista de dicionarios (um por registro)."""
@@ -137,3 +138,106 @@ def criar_colunas_derivadas(registros):
             linha["faixa_receita_item"] = "Alto Valor"
 
     return registros
+
+
+def calcular_metricas(registros):
+    """
+    Calcula as metricas agregadas da lista de registros.
+    Retorna um dicionario no formato {nome_da_metrica: lista_de_linhas}.
+    Chaves minimas: por_mes, top_produtos, por_categoria, por_regiao.
+    """
+    #metricas = {}
+    # use dicionarios (ou defaultdict) para acumular receita_total,
+    # quantidade e numero de vendas por mes, produto, categoria e
+    # regiao; depois converta cada dicionario em uma lista ordenada
+    # de registros (dict.items() + sorted())
+    
+    # Criando as variáveis vazias que receberão os dados:
+    caixas_mes = {}
+    caixas_produto = {}
+    caixas_categoria = {}
+    caixas_regiao = {}
+
+    # Percorrendo os registros com for e somando nas variáveis
+    for reg in registros:
+        
+    # --- Agrupando por Mês ---
+        mes = reg["mes"]
+        if mes not in caixas_mes:
+            caixas_mes[mes] = {"receita_total": 0, "quantidade": 0, "n_vendas": 0}
+        
+        caixas_mes[mes]["receita_total"] += reg["receita_total"]
+        caixas_mes[mes]["quantidade"] += reg["quantidade"]
+        caixas_mes[mes]["n_vendas"] += 1
+        
+        # --- Agrupando por Produto ---
+        produto = reg["produto"]
+        if produto not in caixas_produto:
+            caixas_produto[produto] = {"receita_total": 0}
+        
+        caixas_produto[produto]["receita_total"] += reg["receita_total"]
+        
+        # --- Agrupando por Categoria ---
+        categoria = reg["categoria"]
+        if categoria not in caixas_categoria:
+            caixas_categoria[categoria] = {"receita_total": 0}
+        
+        caixas_categoria[categoria]["receita_total"] += reg["receita_total"]
+        
+        # --- Agrupando por Região ---
+        regiao = reg["regiao"]
+        if regiao not in caixas_regiao:
+            caixas_regiao[regiao] = {"receita_total": 0, "n_vendas": 0}
+        
+        caixas_regiao[regiao]["receita_total"] += reg["receita_total"]
+        caixas_regiao[regiao]["n_vendas"] += 1
+
+    # Transformando Dicts em listas
+    # Lista por Mês (ordenada pelo número do mês)
+    lista_mes = []
+    for m, valores in sorted(caixas_mes.items()):
+        lista_mes.append({
+            "mes": m,
+            "receita_total": round(valores["receita_total"], 2),
+            "quantidade": valores["quantidade"],
+            "n_vendas": valores["n_vendas"]
+        })
+    # Lista por Produto (ordenada por maior receita e limitando ao top 5)
+    lista_produto = []
+    for p, valores in caixas_produto.items():
+        lista_produto.append({
+            "produto": p, 
+            "receita_total": round(valores["receita_total"], 2)
+        })
+    
+    # Ordenando do maior para o menor com base nas receita_total
+    lista_produto.sort(key=lambda x: x["receita_total"], reverse=True)
+    top_5_produtos = lista_produto[:5]
+    # Lista por categoria (ordenada por maior receita)
+    lista_categoria = []
+    for c, valores in caixas_categoria.items():
+        lista_categoria.append({
+            "categoria": c, 
+            "receita_total": round(valores["receita_total"], 2)
+        })
+    lista_categoria.sort(key=lambda x: x["receita_total"], reverse=True)
+    # Lista por região (com cálculo do Ticket Médio)
+    lista_regiao = []
+    for r, valores in caixas_regiao.items():
+        ticket_medio = valores["receita_total"] / valores["n_vendas"]
+        lista_regiao.append({
+            "regiao": r, 
+            "receita_total": round(valores["receita_total"], 2),
+            "ticket_medio": round(ticket_medio, 2)
+        })
+    lista_regiao.sort(key=lambda x: x["receita_total"], reverse=True)
+
+    # Resumo do dicionário
+    metricas = {
+        "por_mes": lista_mes,
+        "top_produtos": top_5_produtos,
+        "por_categoria": lista_categoria,
+        "por_regiao": lista_regiao
+    }
+
+    return metricas
