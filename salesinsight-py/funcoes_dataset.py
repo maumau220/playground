@@ -241,3 +241,58 @@ def calcular_metricas(registros):
     }
 
     return metricas
+
+
+def segmentar_clientes(registros):
+    """
+    RF06 - Agrupa a receita total por cliente e classifica o segmento 
+    (Bronze, Prata, Ouro) usando uma função lambda.
+    """
+    
+    # Agrupa a receita total por cliente
+    total_por_cliente = {}
+    for linha in registros:
+        nome = linha["cliente"]
+        receita = linha["receita_total"]
+        
+        if nome not in total_por_cliente:
+            total_por_cliente[nome] = 0
+            
+        total_por_cliente[nome] += receita
+
+    # Criando a função lambda de classificação exigida pelo projeto
+    # Retorne "Ouro" se total > 15000, senão retorne "Prata" se total >= 5000, senão "Bronze"
+    classificar = lambda total: "Ouro" if total > 15000 else ("Prata" if total >= 5000 else "Bronze")
+    
+    # 3. Construir a lista final já formatada
+    lista_clientes = []
+    for nome, total in total_por_cliente.items():
+        lista_clientes.append({
+            "cliente": nome,
+            "total_gasto": round(total, 2),
+            "segmento": classificar(total) # Aplicando a função lambda aqui!
+        })
+        
+    # 4. Ordenar a lista do cliente que gastou mais para o que gastou menos
+    lista_clientes.sort(key=lambda x: x["total_gasto"], reverse=True)
+    
+    return lista_clientes
+
+def processar_coluna(registros, coluna, funcao_transformacao, nome_saida=None):
+    """
+    RF07 - Aplica uma função de transformação a um campo específico de cada registro.
+    Demonstra o conceito de Função de Ordem Superior (função recebendo função como parâmetro).
+    
+    Parâmetros:
+        registros (list[dict]): Lista de dicionários de dados.
+        coluna (str): Nome do campo original a ser processado.
+        funcao_transformacao (function): Função (ou lambda) a ser aplicada sobre cada valor.
+        nome_saida (str, opcional): Nome da nova coluna gerada. Se omitido, usará '{coluna}_transformado'.
+        
+    Retorna:
+        list[dict]: A lista de registros atualizada com a nova coluna.
+    """
+    nome_saida = nome_saida or f"{coluna}_transformado"
+    for linha in registros:
+        linha[nome_saida] = funcao_transformacao(linha[coluna])
+    return registros
