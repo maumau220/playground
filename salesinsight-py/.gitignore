@@ -1,10 +1,7 @@
 .venv
 .venv/
-.planejamento
-.planejamento/
-planejamento
-planejamento/
 .testes
 .testes/
 __pycache__
 __pycache__/
+salesinsight_rascunho.ipynb

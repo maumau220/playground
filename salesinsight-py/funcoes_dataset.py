@@ -12,6 +12,7 @@ def carregar_dataset(caminho_csv):
     with open(caminho_csv, "r", encoding="utf-8") as arquivo:
         leitor = csv.DictReader(arquivo)
         registros = list(leitor)
+
     return registros
 
 def inspecionar_dados(registros):
@@ -32,10 +33,10 @@ def inspecionar_dados(registros):
     print("\nPrimeiros registros:")
     for linha in registros[:5]:
         print(linha)
+
     return registros
 
 # Próximo bloco de funções em cumprimento ao RF03 do guia
-
 def limpar_dados(registros):
     """
     Limpa e trata a lista de registros de vendas.
@@ -79,24 +80,8 @@ def limpar_dados(registros):
     relatorio["finais"] = len(limpos)
     print("\n=== RELATORIO DE LIMPEZA ===")
     print(relatorio)
+
     return limpos, relatorio
-
-# Trecho de apoio:
-# # conversao de data com tratamento de erro
-# def converter_data(registros):
-#     texto_data = registros["data_venda"]
-#     nome = ""
-#     try:
-#         data = datetime.strptime(texto_data, "%Y-%m-%d")
-#     except ValueError:
-#         data = None                       # marca como invalida
-
-#     # limpeza de texto com expressao regular
-#     nome_limpo = re.sub(r"[^A-Za-z0-9_]", "", nome.strip())
-
-#     # validacao de formato com padrao compilado
-#     padrao_cliente = re.compile(r"^Cliente_\d{3}$", flags=re.IGNORECASE)
-#     return padrao_cliente
 
 def criar_colunas_derivadas(registros):
     # Mapeamento de meses em portugues (Semana 04/05 - Dicionários)
@@ -138,7 +123,6 @@ def criar_colunas_derivadas(registros):
             linha["faixa_receita_item"] = "Alto Valor"
 
     return registros
-
 
 def calcular_metricas(registros):
     """
@@ -242,7 +226,6 @@ def calcular_metricas(registros):
 
     return metricas
 
-
 def segmentar_clientes(registros):
     """
     RF06 - Agrupa a receita total por cliente e classifica o segmento 
@@ -295,18 +278,8 @@ def processar_coluna(registros, coluna, funcao_transformacao, nome_saida=None):
     nome_saida = nome_saida or f"{coluna}_transformado"
     for linha in registros:
         linha[nome_saida] = funcao_transformacao(linha[coluna])
+
     return registros
-
-
-
-
-
-
-
-
-
-
-
 
 def exportar_resultados(metricas, clientes, estatisticas):
     """
@@ -343,43 +316,3 @@ def exportar_resultados(metricas, clientes, estatisticas):
     with open(caminho, "r", encoding="utf-8") as f:
         conferencia = json.load(f)
     print(f"JSON gravado e lido: {conferencia}")
-
-
-#
-#
-#
-# 
-# 
-# 
-#
-# 
-#
-#
-#
-#
-#
-## RF09
-
-def main():
-    """Executa o fluxo completo do SalesInsight PY."""
-    print("=" * 60)
-    print(" SALESINSIGHT PY - Análise de Dados de Vendas")
-    print("=" * 60)
-
-    # Etapa 0 - garantir a existencia do dataset
-    if not os.path.exists("vendas.csv"):
-        gerar_dataset_vendas("vendas.csv")
-
-    # Etapas 1 a 6 - fluxo pelas funcoes
-    registros = carregar_dataset("vendas.csv")
-    inspecionar_dados(registros)
-    registros_limpos, relatorio = limpar_dados(registros)
-    registros_limpos = criar_colunas_derivadas(registros_limpos)
-    metricas = calcular_metricas(registros_limpos)
-    clientes = segmentar_clientes(registros_limpos)
-    exportar_resultados(metricas, clientes, estatisticas={})
-
-    print("\n[CONCLUÍDO] Fluxo finalizado com sucesso.")
-
-if __name__ == "__main__":
-    main()
